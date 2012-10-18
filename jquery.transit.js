@@ -5,6 +5,9 @@
  *
  * http://ricostacruz.com/jquery.transit
  * http://github.com/rstacruz/jquery.transit
+ *
+ * Reviewed by Simon SER to work with jQuery 1.8.2.
+ *
  */
 
 (function($) {
@@ -603,12 +606,20 @@
 
     $.cssHooks[prop] = {
       get: function(elem) {
-        var t = $(elem).css('transform') || new Transform();
+        var t = $(elem).css('transform');
+        
+        if(!t || t == 'none' || !t.get)
+          t = new Transform();
+
         return t.get(prop);
       },
 
       set: function(elem, value) {
-        var t = $(elem).css('transform') || new Transform();
+        var t = $(elem).css('transform');
+
+        if(!t || t == 'none' || !t.setFromString)
+          t = new Transform();
+
         t.setFromString(prop, value);
 
         $(elem).css({ transform: t });
